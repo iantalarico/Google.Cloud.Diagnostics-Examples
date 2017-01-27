@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Google.Cloud.Diagnostics.AspNetCore;
 
 namespace AspNetCore
 {
@@ -36,14 +37,16 @@ namespace AspNetCore
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
+            services.AddGoogleTrace("cloud-sharp-work");
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+
+            loggerFactory.AddGoogle("cloud-sharp-work");
 
             app.UseApplicationInsightsRequestTelemetry();
 
@@ -58,6 +61,9 @@ namespace AspNetCore
             }
 
             app.UseApplicationInsightsExceptionTelemetry();
+
+            app.UseGoogleTrace();
+            app.UseGoogleExceptionLogging("cloud-sharp-work", "service", "version");
 
             app.UseStaticFiles();
 

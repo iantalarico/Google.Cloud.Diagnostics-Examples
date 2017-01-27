@@ -16,6 +16,7 @@ using Microsoft.Owin.Security.OAuth;
 using AspNet_WebAPI.Models;
 using AspNet_WebAPI.Providers;
 using AspNet_WebAPI.Results;
+using Google.Cloud.Diagnostics.AspNet;
 
 namespace AspNet_WebAPI.Controllers
 {
@@ -56,7 +57,9 @@ namespace AspNet_WebAPI.Controllers
         [Route("UserInfo")]
         public UserInfoViewModel GetUserInfo()
         {
+            CloudTrace.CurrentTracer.StartSpan(nameof(GetUserInfo));
             ExternalLoginData externalLogin = ExternalLoginData.FromIdentity(User.Identity as ClaimsIdentity);
+            CloudTrace.CurrentTracer.EndSpan();
 
             return new UserInfoViewModel
             {

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AspNet_MVC.Models;
+using Google.Cloud.Diagnostics.AspNet;
 
 namespace AspNet_MVC.Controllers
 {
@@ -57,7 +58,9 @@ namespace AspNet_MVC.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            CloudTrace.CurrentTracer.StartSpan(nameof(Login));
             ViewBag.ReturnUrl = returnUrl;
+            CloudTrace.CurrentTracer.EndSpan();
             return View();
         }
 
